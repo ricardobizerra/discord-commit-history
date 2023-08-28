@@ -50,10 +50,16 @@ try:
                     commit_icon_url = commit["author"]["avatar_url"]
                     commit_url = commit["html_url"]
                     description += f"[`{commit_sha}`]({commit_url}) {commit_message}\n"
+                
+                if len(commits) > 1:
+                    title = f"[{github_repo.split('/')[1]}:{branch}] {len(commits)} new commits"
+                else:
+                    title = f"[{github_repo.split('/')[1]}:{branch}] {len(commits)} new commit"
 
                 # Send notification to Discord
                 webhook = DiscordWebhook(url=discord_webhook_url)
-                embed = DiscordEmbed(title=f"[{github_repo.split('/')[1]}:{branch}] {len(commits)} new commits",
+                embed = DiscordEmbed(title=title,
+                                        url=commit_url,
                                         description=description,
                                         color="3D7C4E")
                 embed.set_author(name=commit_author, url=commit_author_url, icon_url=commit_icon_url)
